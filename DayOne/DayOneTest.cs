@@ -2,7 +2,7 @@ namespace dotnet_aoc.DayOne;
 
 using Xunit;
 
-public class DayOneTest
+public static class DayOneTest
 {
     [Theory]
     [InlineData(@"1abc2

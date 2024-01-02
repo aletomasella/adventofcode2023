@@ -1,6 +1,6 @@
 namespace dotnet_aoc.DayOne;
 
-public class DayOne
+public static class DayOne
 {
     public static int PartOne(string[] input)
     {
