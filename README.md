@@ -1,2 +1,3 @@
-# adventofcode2023
-Advent of code 2023 solutions in C#
+# Advent of Code 2023
+
+Solutions in C# for [Advent of Code 2023](https://adventofcode.com/2023).
