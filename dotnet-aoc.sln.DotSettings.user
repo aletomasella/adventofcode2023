@@ -4,5 +4,6 @@
     &lt;TestId&gt;xUnit::00452E89-92BE-4586-BB52-D82445CA4758::net8.0::dotnet_aoc.DayOne.DayOneTest&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::00452E89-92BE-4586-BB52-D82445CA4758::net8.0::dotnet_aoc.DayTwo.DayTwoTest.TestPartOne&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::00452E89-92BE-4586-BB52-D82445CA4758::net8.0::dotnet_aoc.DayTwo.DayTwoTest.TestPartTwo&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::00452E89-92BE-4586-BB52-D82445CA4758::net8.0::dotnet_aoc.DayThree.DayThreeTest.PartOne&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
