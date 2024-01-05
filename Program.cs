@@ -55,6 +55,7 @@ var inputFour = fileInputFour.ReadToEnd();
 var resultDayFourPartOne = DayFour.PartOne(inputFour.Split('\n'));
 //
 Console.WriteLine($"Day Four Part One: {resultDayFourPartOne}");
+
 //
 var resultDayFourPartTwo = DayFour.PartTwo(inputFour.Split('\n'));
 //
