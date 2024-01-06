@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 
+using dotnet_aoc.DayFive;
 using dotnet_aoc.DayFour;
 using dotnet_aoc.DayOne;
 using dotnet_aoc.DayThree;
@@ -48,17 +49,30 @@ using dotnet_aoc.DayTwo;
 
 // DAY FOUR ADVENT OF CODE
 Console.WriteLine("DAY FOUR ADVENT OF CODE");
-var fileInputFour = new StreamReader("./DayFour/input.txt");
-
-var inputFour = fileInputFour.ReadToEnd();
-
-var resultDayFourPartOne = DayFour.PartOne(inputFour.Split('\n'));
+// var fileInputFour = new StreamReader("./DayFour/input.txt");
 //
-Console.WriteLine($"Day Four Part One: {resultDayFourPartOne}");
-
+// var inputFour = fileInputFour.ReadToEnd();
 //
-var resultDayFourPartTwo = DayFour.PartTwo(inputFour.Split('\n'));
+// var resultDayFourPartOne = DayFour.PartOne(inputFour.Split('\n'));
+// //
+// Console.WriteLine($"Day Four Part One: {resultDayFourPartOne}");
 //
-Console.WriteLine($"Day Four Part Two: {resultDayFourPartTwo}");
+// //
+// var resultDayFourPartTwo = DayFour.PartTwo(inputFour.Split('\n'));
+// //
+// Console.WriteLine($"Day Four Part Two: {resultDayFourPartTwo}");
 
 // DAY FIVE ADVENT OF CODE
+Console.WriteLine("DAY FIVE ADVENT OF CODE");
+
+var fileInputFive = new StreamReader("./DayFive/input.txt");
+
+var inputFive = fileInputFive.ReadToEnd();
+
+var resultDayFivePartOne = DayFive.PartOne(inputFive.Split('\n'));
+
+Console.WriteLine($"Day Five Part One: {resultDayFivePartOne}");
+
+var resultDayFivePartTwo = DayFive.PartTwo(inputFive.Split('\n'));
+
+Console.WriteLine($"Day Five Part Two: {resultDayFivePartTwo}");
