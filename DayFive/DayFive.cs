@@ -41,9 +41,16 @@ public static class DayFive
 
                     // 0 => SOIL IDs | 1 => SEED IDs | 2 => LENGTH
                     var data = mapLine.Split(" ").Select(long.Parse).ToList();
+                    var seedsFound = allSeeds.Where(x => x.Key >= data[1] && x.Key <= data[1] + data[2])
+                        .Aggregate(new Dictionary<long, Seed>(), (acc, x) =>
+                        {
+                            acc.Add(x.Key, x.Value);
+                            return acc;
+                        });
+
                     for (var k = data[1]; k <= data[1] + data[2]; k++)
                     {
-                        if (allSeeds.ContainsKey(k))
+                        if (seedsFound.ContainsKey(k))
                         {
                             var seed = allSeeds[k];
                             seed.Soil = data[0];
@@ -59,7 +66,7 @@ public static class DayFive
             if (line.Contains("soil-to-fertilizer"))
             {
                 // Same as above
-                var mappedSeeds = new List<Seed>();
+                var notMappedKeys = allSeeds.Select(x => x.Key).ToList();
 
                 for (var j = i + 1; j < input.Length; j++)
                 {
@@ -73,15 +80,23 @@ public static class DayFive
 
                     // 0 => FERTILIZER IDs | 1 => SOIL IDs | 2 => LENGTH
                     var data = mapLine.Split(" ").Select(long.Parse).ToList();
+
+                    var soilsFound = allSeeds.Where(x => x.Value.Soil >= data[1] && x.Value.Soil <= data[1] + data[2])
+                        .Aggregate(new Dictionary<long, Seed>(), (acc, x) =>
+                        {
+                            acc.Add(x.Value.Soil, x.Value);
+                            return acc;
+                        });
+
+                    if (soilsFound.Count == 0) continue;
+
+
                     for (long k = data[1]; k <= data[1] + data[2]; k++)
                     {
-                        var seeds = allSeeds.Where(x => x.Value.Soil == k).ToArray();
-
-
-                        foreach (var s in seeds)
+                        if (soilsFound.ContainsKey(k))
                         {
-                            s.Value.Fertilazer = data[0];
-                            mappedSeeds.Add(s.Value);
+                            allSeeds[soilsFound[k].Id].Fertilazer = data[0];
+                            notMappedKeys.Remove(soilsFound[k].Id);
                         }
 
 
@@ -89,10 +104,9 @@ public static class DayFive
                     }
                 }
 
-                foreach (var s in allSeeds)
+                foreach (var s in notMappedKeys)
                 {
-                    if (mappedSeeds.Contains(s.Value)) continue;
-                    s.Value.Fertilazer = s.Value.Soil;
+                    allSeeds[s].Fertilazer = allSeeds[s].Soil;
                 }
 
                 continue;
@@ -100,7 +114,8 @@ public static class DayFive
 
             if (line.StartsWith("fertilizer-to-water map:"))
             {
-                var mappedSeeds = new List<Seed>();
+                var notMappedKeys = allSeeds.Select(x => x.Key).ToList();
+
 
                 for (var j = i + 1; j < input.Length; j++)
                 {
@@ -112,18 +127,25 @@ public static class DayFive
                     }
 
                     // 0 => WATER IDs | 1 => FERTILIZER IDs | 2 => LENGTH
+
+
                     var data = mapLine.Split(" ").Select(long.Parse).ToList();
+
+                    var fertilizersFound = allSeeds.Where(x =>
+                            x.Value.Fertilazer >= data[1] && x.Value.Fertilazer <= data[1] + data[2])
+                        .Aggregate(new Dictionary<long, Seed>(), (acc, x) =>
+                        {
+                            acc.Add(x.Value.Fertilazer, x.Value);
+                            return acc;
+                        });
+
+
                     for (long k = data[1]; k < data[1] + data[2]; k++)
                     {
-                        var seed = allSeeds.Where(x => x.Value.Fertilazer == k).ToArray();
-
-                        if (seed.Length > 0)
+                        if (fertilizersFound.ContainsKey(k))
                         {
-                            foreach (var s in seed)
-                            {
-                                s.Value.Water = data[0];
-                                mappedSeeds.Add(s.Value);
-                            }
+                            allSeeds[fertilizersFound[k].Id].Water = data[0];
+                            notMappedKeys.Remove(fertilizersFound[k].Id);
                         }
 
 
@@ -131,10 +153,9 @@ public static class DayFive
                     }
                 }
 
-                foreach (var s in allSeeds)
+                foreach (var s in notMappedKeys)
                 {
-                    if (mappedSeeds.Contains(s.Value)) continue;
-                    s.Value.Water = s.Value.Fertilazer;
+                    allSeeds[s].Water = allSeeds[s].Fertilazer;
                 }
 
                 continue;
@@ -142,7 +163,8 @@ public static class DayFive
 
             if (line.StartsWith("water-to-light map:"))
             {
-                var mappedSeeds = new List<Seed>();
+                var notMappedKeys = allSeeds.Select(x => x.Key).ToList();
+
                 // Same as above
                 for (var j = i + 1; j < input.Length; j++)
                 {
@@ -155,18 +177,20 @@ public static class DayFive
 
                     // 0 => LIGHT IDs | 1 => WATER IDs | 2 => LENGTH
                     var data = mapLine.Split(" ").Select(long.Parse).ToList();
+
+                    var waterFound = allSeeds.Where(x => x.Value.Water >= data[1] && x.Value.Water <= data[1] + data[2])
+                        .Aggregate(new Dictionary<long, Seed>(), (acc, x) =>
+                        {
+                            acc.Add(x.Value.Water, x.Value);
+                            return acc;
+                        });
+
                     for (long k = data[1]; k < data[1] + data[2]; k++)
                     {
-                        var seed = allSeeds.Where(x => x.Value.Water == k).ToArray();
-
-
-                        if (seed.Length > 0)
+                        if (waterFound.ContainsKey(k))
                         {
-                            foreach (var s in seed)
-                            {
-                                s.Value.Light = data[0];
-                                mappedSeeds.Add(s.Value);
-                            }
+                            allSeeds[waterFound[k].Id].Light = data[0];
+                            notMappedKeys.Remove(waterFound[k].Id);
                         }
 
 
@@ -174,10 +198,9 @@ public static class DayFive
                     }
                 }
 
-                foreach (var s in allSeeds)
+                foreach (var s in notMappedKeys)
                 {
-                    if (mappedSeeds.Contains(s.Value)) continue;
-                    s.Value.Light = s.Value.Water;
+                    allSeeds[s].Light = allSeeds[s].Water;
                 }
 
                 continue;
@@ -185,7 +208,8 @@ public static class DayFive
 
             if (line.StartsWith("light-to-temperature map:"))
             {
-                var mappedSeeds = new List<Seed>();
+                var notMappedKeys = allSeeds.Select(x => x.Key).ToList();
+
 
                 // Same as above
                 for (var j = i + 1; j < input.Length; j++)
@@ -199,17 +223,20 @@ public static class DayFive
 
                     // 0 => TEMPERATURE IDs | 1 => LIGHT IDs | 2 => LENGTH
                     var data = mapLine.Split(" ").Select(long.Parse).ToList();
+
+                    var lightFound = allSeeds.Where(x => x.Value.Light >= data[1] && x.Value.Light <= data[1] + data[2])
+                        .Aggregate(new Dictionary<long, Seed>(), (acc, x) =>
+                        {
+                            acc.Add(x.Value.Light, x.Value);
+                            return acc;
+                        });
+
                     for (long k = data[1]; k < data[1] + data[2]; k++)
                     {
-                        var seed = allSeeds.Where(x => x.Value.Light == k).ToArray();
-
-                        if (seed.Length > 0)
+                        if (lightFound.ContainsKey(k))
                         {
-                            foreach (var s in seed)
-                            {
-                                s.Value.Temperature = data[0];
-                                mappedSeeds.Add(s.Value);
-                            }
+                            allSeeds[lightFound[k].Id].Temperature = data[0];
+                            notMappedKeys.Remove(lightFound[k].Id);
                         }
 
 
@@ -217,10 +244,9 @@ public static class DayFive
                     }
                 }
 
-                foreach (var s in allSeeds)
+                foreach (var s in notMappedKeys)
                 {
-                    if (mappedSeeds.Contains(s.Value)) continue;
-                    s.Value.Temperature = s.Value.Light;
+                    allSeeds[s].Temperature = allSeeds[s].Light;
                 }
 
                 continue;
@@ -228,7 +254,8 @@ public static class DayFive
 
             if (line.StartsWith("temperature-to-humidity map:"))
             {
-                var mappedSeeds = new List<Seed>();
+                var notMappedKeys = allSeeds.Select(x => x.Key).ToList();
+
                 // Same as above
                 for (var j = i + 1; j < input.Length; j++)
                 {
@@ -241,27 +268,31 @@ public static class DayFive
 
                     // 0 => HUMIDITY IDs | 1 => TEMPERATURE IDs | 2 => LENGTH
                     var data = mapLine.Split(" ").Select(long.Parse).ToList();
+
+                    var temperatureFound = allSeeds.Where(x =>
+                            x.Value.Temperature >= data[1] && x.Value.Temperature <= data[1] + data[2])
+                        .Aggregate(new Dictionary<long, Seed>(), (acc, x) =>
+                        {
+                            acc.Add(x.Value.Temperature, x.Value);
+                            return acc;
+                        });
+
                     for (long k = data[1]; k < data[1] + data[2]; k++)
                     {
-                        var seed = allSeeds.Where(x => x.Value.Temperature == k).ToArray();
-
-                        if (seed.Length > 0)
+                        if (temperatureFound.ContainsKey(k))
                         {
-                            foreach (var s in seed)
-                            {
-                                s.Value.Humidity = data[0];
-                                mappedSeeds.Add(s.Value);
-                            }
+                            allSeeds[temperatureFound[k].Id].Humidity = data[0];
+                            notMappedKeys.Remove(temperatureFound[k].Id);
                         }
+
 
                         data[0] += 1;
                     }
                 }
 
-                foreach (var s in allSeeds)
+                foreach (var s in notMappedKeys)
                 {
-                    if (mappedSeeds.Contains(s.Value)) continue;
-                    s.Value.Humidity = s.Value.Temperature;
+                    allSeeds[s].Humidity = allSeeds[s].Temperature;
                 }
 
                 continue;
@@ -269,7 +300,7 @@ public static class DayFive
 
             if (line.StartsWith("humidity-to-location map:"))
             {
-                var mappedSeeds = new List<Seed>();
+                var notMappedKeys = allSeeds.Select(x => x.Key).ToList();
 
                 // Same as above
                 for (var j = i + 1; j < input.Length; j++)
@@ -283,27 +314,31 @@ public static class DayFive
 
                     // 0 => LOCATION IDs | 1 => HUMIDITY IDs | 2 => LENGTH
                     var data = mapLine.Split(" ").Select(long.Parse).ToList();
+
+                    var humidityFound = allSeeds
+                        .Where(x => x.Value.Humidity >= data[1] && x.Value.Humidity <= data[1] + data[2])
+                        .Aggregate(new Dictionary<long, Seed>(), (acc, x) =>
+                        {
+                            acc.Add(x.Value.Humidity, x.Value);
+                            return acc;
+                        });
+
                     for (long k = data[1]; k < data[1] + data[2]; k++)
                     {
-                        var seed = allSeeds.Where(x => x.Value.Humidity == k).ToArray();
-
-                        if (seed.Length > 0)
+                        if (humidityFound.ContainsKey(k))
                         {
-                            foreach (var s in seed)
-                            {
-                                s.Value.Location = data[0];
-                                mappedSeeds.Add(s.Value);
-                            }
+                            allSeeds[humidityFound[k].Id].Location = data[0];
+                            notMappedKeys.Remove(humidityFound[k].Id);
                         }
+
 
                         data[0] += 1;
                     }
                 }
 
-                foreach (var s in allSeeds)
+                foreach (var s in notMappedKeys)
                 {
-                    if (mappedSeeds.Contains(s.Value)) continue;
-                    s.Value.Location = s.Value.Humidity;
+                    allSeeds[s].Location = allSeeds[s].Humidity;
                 }
             }
         }
