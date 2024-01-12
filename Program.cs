@@ -69,9 +69,9 @@ var fileInputFive = new StreamReader("./DayFive/input.txt");
 
 var inputFive = fileInputFive.ReadToEnd();
 
-var resultDayFivePartOne = DayFive.PartOne(inputFive.Split('\n'));
+// var resultDayFivePartOne = DayFive.PartOne(inputFive.Split('\n'));
 
-Console.WriteLine($"Day Five Part One: {resultDayFivePartOne}");
+// Console.WriteLine($"Day Five Part One: {resultDayFivePartOne}");
 
 var resultDayFivePartTwo = DayFive.PartTwo(inputFive.Split('\n'));
 
