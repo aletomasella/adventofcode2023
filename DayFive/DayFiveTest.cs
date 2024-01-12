@@ -41,7 +41,7 @@ humidity-to-location map:
 60 56 37
 56 93 4";
 
-        Assert.Equal(35, DayFive.PartOne(input.Split('\n')));
+        Assert.Equal(35, DayFive.PartOneEfficent(input.Split('\n')));
     }
 
     [Fact]
@@ -81,6 +81,6 @@ humidity-to-location map:
 60 56 37
 56 93 4";
 
-        Assert.Equal(46, DayFive.PartTwo(input.Split('\n')));
+        Assert.Equal(46, DayFive.PartTwoEfficent(input.Split('\n')));
     }
 }

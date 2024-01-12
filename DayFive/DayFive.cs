@@ -713,6 +713,177 @@ public static class DayFive
         var result = allSeeds.OrderBy(x => x.Value.Location).First();
         return result.Value.Location;
     }
+
+
+    public static long PartOneEfficent(string[] input)
+    {
+        if (input.Length == 0) return 0;
+
+        var result = new List<long>();
+
+        var seeds = input[0].Split(":")[1].Split(' ')
+            .Where(x => x.Trim() != String.Empty)
+            .Select(x => long.Parse(x.Trim()))
+            .ToList();
+
+
+        var blocksToMap = input.Skip(1).Where(x => !x.Contains(':'))
+            .Select(x =>
+            {
+                if (x.Trim().Equals(String.Empty))
+                {
+                    return (0, 0, 0);
+                }
+
+                var rangesStr = x.Split(' ');
+                var ranges = (long.Parse(rangesStr[0]), long.Parse(rangesStr[1]), long.Parse(rangesStr[2]));
+                return ranges;
+            }).ToList();
+
+        // foreach (var x in blocksToMap)
+        // {
+        //     Console.WriteLine($"BLOCK: {x.Item1} | {x.Item2} | {x.Item3}");
+        // }
+
+
+        for (var i = 0;
+             i < seeds.Count;
+             i++)
+        {
+            var seed = seeds[i];
+            var updated = false;
+            foreach (var (dest, src, length) in blocksToMap)
+            {
+                if (dest == 0 && src == 0 && length == 0)
+                {
+                    updated = false;
+                    continue;
+                }
+
+
+                if (seed >= src && seed <= src + length && !updated)
+                {
+                    seed = seed - src + dest;
+                    updated = true;
+                }
+
+                // if (i == 0)
+                // {
+                //     Console.WriteLine($"AFTER MAP: {seed}");
+                // }
+            }
+
+            result.Add(seed);
+        }
+
+
+        return result.Min();
+    }
+
+    public static long PartTwoEfficent(string[] input)
+    {
+        if (input.Length == 0) return 0;
+
+
+        var seedsPlusRanges = input[0].Split(":")[1].Split(' ')
+            .Where(x => x.Trim() != String.Empty)
+            .Select(x => long.Parse(x.Trim()))
+            .ToList();
+
+
+        var blocksFinded = input.Skip(1).Where(x => !x.Contains(':'))
+            .Select(x =>
+            {
+                if (x.Trim().Equals(String.Empty))
+                {
+                    return (0, 0, 0);
+                }
+
+                var rangesStr = x.Split(' ');
+                var ranges = (long.Parse(rangesStr[0]), long.Parse(rangesStr[1]), long.Parse(rangesStr[2]));
+                return ranges;
+            }).ToList();
+
+        var blocksToMap = new List<List<(long, long, long)>>();
+
+        var newBlocks = new List<(long, long, long)>();
+        while (blocksFinded.Count > 0)
+        {
+            var block = blocksFinded[0];
+            blocksFinded.RemoveAt(0);
+
+            if (block.Item1 == 0 && block.Item2 == 0 && block.Item3 == 0)
+            {
+                blocksToMap.Add(newBlocks);
+                newBlocks.Clear();
+                continue;
+            }
+
+            newBlocks.Add(block);
+        }
+
+        blocksToMap.Add(newBlocks);
+
+        var seeds = new List<(long, long)>();
+
+
+        for (var i = 0; i < seedsPlusRanges.Count; i += 2)
+        {
+            var seed = seedsPlusRanges[i];
+            var range = seedsPlusRanges[i + 1];
+
+            seeds.Add((seed, seed + range));
+        }
+
+
+        var aux = new Dictionary<long, List<(long, long)>>();
+
+        aux.Add(0, seeds);
+
+
+        foreach (var block in blocksToMap)
+        {
+            var newSeeds = new List<(long, long)>();
+
+            while (aux[0].Count > 0)
+            {
+                var (start, end) = aux[0][^1];
+                aux[0].RemoveAt(aux[0].Count - 1);
+
+                // Console.WriteLine($"SEEDS SIZE: {aux[0].Count}");
+
+                foreach (var (dest, src, length) in block)
+                {
+                    var overlapStart = Math.Max(start, src);
+                    var overlapEnd = Math.Min(end, src + length);
+
+                    if (overlapStart < overlapEnd)
+                    {
+                        newSeeds.Add((overlapStart - src + dest, overlapEnd - src + dest));
+
+                        // if (overlapStart > start)
+                        // {
+                        //     aux[0].Add((start, overlapStart));
+                        // }
+                        //
+                        // if (overlapEnd < end)
+                        // {
+                        //     aux[0].Add((overlapEnd, end));
+                        // }
+                    }
+                    else
+                    {
+                        newSeeds.Add((start, end));
+                    }
+                }
+            }
+
+            aux[0] = newSeeds;
+        }
+
+
+        return aux[0].Min(x => x.Item1);
+    }
 }
 
 public class Seed
