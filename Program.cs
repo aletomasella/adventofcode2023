@@ -65,14 +65,14 @@ Console.WriteLine("DAY FOUR ADVENT OF CODE");
 // DAY FIVE ADVENT OF CODE
 Console.WriteLine("DAY FIVE ADVENT OF CODE");
 
-var fileInputFive = new StreamReader("./DayFive/input.txt");
+var fileInputFiveReader = new StreamReader("./DayFive/input.txt");
 
-var inputFive = fileInputFive.ReadToEnd();
+// var inputFive = fileInputFiveReader.ReadToEnd();
 
 // var resultDayFivePartOne = DayFive.PartOneEfficent(inputFive.Split('\n'));
 //
 // Console.WriteLine($"Day Five Part One: {resultDayFivePartOne}");
 
-var resultDayFivePartTwo = DayFive.PartTwoEfficent(inputFive.Split('\n'));
+var resultDayFivePartTwo = DayFive.PartTwoEfficent(fileInputFiveReader);
 
 Console.WriteLine($"Day Five Part Two: {resultDayFivePartTwo}");

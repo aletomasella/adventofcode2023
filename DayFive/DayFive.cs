@@ -766,11 +766,6 @@ public static class DayFive
                     seed = seed - src + dest;
                     updated = true;
                 }
-
-                // if (i == 0)
-                // {
-                //     Console.WriteLine($"AFTER MAP: {seed}");
-                // }
             }
 
             result.Add(seed);
@@ -780,109 +775,61 @@ public static class DayFive
         return result.Min();
     }
 
-    public static long PartTwoEfficent(string[] input)
+    public static long PartTwoEfficent(StreamReader reader, int mapGroupCount = 7)
     {
-        if (input.Length == 0) return 0;
+        var seedsLine = reader.ReadLine()!.Substring("seeds:".Length);
+        var seedPairs = seedsLine.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(long.Parse)
+            .ToArray();
 
+        reader.ReadLine(); // empty line
 
-        var seedsPlusRanges = input[0].Split(":")[1].Split(' ')
-            .Where(x => x.Trim() != String.Empty)
-            .Select(x => long.Parse(x.Trim()))
-            .ToList();
+        var mapGroups = new List<RangeMapGroup>();
 
-
-        var blocksFinded = input.Skip(1).Where(x => !x.Contains(':'))
-            .Select(x =>
-            {
-                if (x.Trim().Equals(String.Empty))
-                {
-                    return (0, 0, 0);
-                }
-
-                var rangesStr = x.Split(' ');
-                var ranges = (long.Parse(rangesStr[0]), long.Parse(rangesStr[1]), long.Parse(rangesStr[2]));
-                return ranges;
-            }).ToList();
-
-        var blocksToMap = new List<List<(long, long, long)>>();
-
-        var newBlocks = new List<(long, long, long)>();
-        while (blocksFinded.Count > 0)
+        for (long i = 0; i < mapGroupCount; i++)
         {
-            var block = blocksFinded[0];
-            blocksFinded.RemoveAt(0);
+            reader.ReadLine(); // header
 
-            if (block.Item1 == 0 && block.Item2 == 0 && block.Item3 == 0)
+            var maps = new List<RangeMap>();
+            string? line = reader.ReadLine();
+            while (!string.IsNullOrEmpty(line))
             {
-                blocksToMap.Add(newBlocks);
-                newBlocks.Clear();
-                continue;
+                var parts = line.Split(' ').Select(long.Parse).ToArray();
+                maps.Add(new RangeMap(parts[0], parts[1], parts[2]));
+                line = reader.ReadLine();
             }
 
-            newBlocks.Add(block);
+            var seedRangeGroup = new RangeMapGroup(maps.ToArray());
+            mapGroups.Add(seedRangeGroup);
         }
 
-        blocksToMap.Add(newBlocks);
-
-        var seeds = new List<(long, long)>();
-
-
-        for (var i = 0; i < seedsPlusRanges.Count; i += 2)
+        var seeds = new List<SeedRange>();
+        for (int seedPairId = 0; seedPairId < seedPairs.Length / 2; seedPairId++)
         {
-            var seed = seedsPlusRanges[i];
-            var range = seedsPlusRanges[i + 1];
-
-            seeds.Add((seed, seed + range));
+            var startingSeed = seedPairs[seedPairId * 2];
+            var length = seedPairs[seedPairId * 2 + 1];
+            seeds.Add(new(startingSeed, length));
         }
 
-
-        var aux = new Dictionary<long, List<(long, long)>>();
-
-        aux.Add(0, seeds);
+        long best = long.MaxValue;
 
 
-        foreach (var block in blocksToMap)
+        var seedRanges = seeds;
+        foreach (var group in mapGroups)
         {
-            var newSeeds = new List<(long, long)>();
+            var newSeedRanges = new List<SeedRange>();
 
-            while (aux[0].Count > 0)
+            foreach (var seedRange in seedRanges)
             {
-                var (start, end) = aux[0][^1];
-                aux[0].RemoveAt(aux[0].Count - 1);
-
-                // Console.WriteLine($"SEEDS SIZE: {aux[0].Count}");
-
-                foreach (var (dest, src, length) in block)
-                {
-                    var overlapStart = Math.Max(start, src);
-                    var overlapEnd = Math.Min(end, src + length);
-
-                    if (overlapStart < overlapEnd)
-                    {
-                        newSeeds.Add((overlapStart - src + dest, overlapEnd - src + dest));
-
-                        // if (overlapStart > start)
-                        // {
-                        //     aux[0].Add((start, overlapStart));
-                        // }
-                        //
-                        // if (overlapEnd < end)
-                        // {
-                        //     aux[0].Add((overlapEnd, end));
-                        // }
-                    }
-                    else
-                    {
-                        newSeeds.Add((start, end));
-                    }
-                }
+                var mappedRanges = group.Map(seedRange);
+                newSeedRanges.AddRange(mappedRanges);
             }
 
-            aux[0] = newSeeds;
+            seedRanges = newSeedRanges;
         }
 
 
-        return aux[0].Min(x => x.Item1);
+        return seedRanges.Select(s => s.Start).Min();
     }
 }
 
@@ -908,4 +855,91 @@ public class Seed
         this.Humidity = id;
         this.Location = id;
     }
+}
+
+class RangeMapGroup
+{
+    private readonly RangeMap[] _maps;
+
+    public RangeMapGroup(RangeMap[] maps)
+    {
+        _maps = maps.OrderBy(s => s.SourceStart).ToArray();
+    }
+
+    public SeedRange[] Map(SeedRange range)
+    {
+        var results = new List<SeedRange>();
+
+        var remainingRange = range;
+
+        foreach (var map in _maps)
+        {
+            // The a part or whole remaining range is before the map starts
+            //    identity map for this part
+            if (remainingRange.Start < map.SourceStart)
+            {
+                var cutOffLength = Math.Min(
+                    remainingRange.Length,
+                    map.SourceStart - remainingRange.Start);
+
+                var cutOff = new SeedRange(remainingRange.Start, cutOffLength);
+                results.Add(cutOff);
+
+                remainingRange = new SeedRange(
+                    remainingRange.Start + cutOffLength,
+                    remainingRange.Length - cutOffLength);
+            }
+
+            if (remainingRange.Length <= 0)
+            {
+                break;
+            }
+
+            // check for intersection with current map
+            if (remainingRange.Start >= map.SourceStart &&
+                remainingRange.Start < (map.SourceStart + map.RangeLength))
+            {
+                var intersectionLength = Math.Min(
+                    remainingRange.Length,
+                    (map.SourceStart + map.RangeLength) - remainingRange.Start);
+                var intersection = new SeedRange(remainingRange.Start, intersectionLength);
+                var transformedRange = map.Transform(intersection);
+                results.Add(transformedRange);
+
+                remainingRange = new SeedRange(
+                    remainingRange.Start + intersectionLength,
+                    remainingRange.Length - intersectionLength);
+            }
+
+            if (remainingRange.Length <= 0)
+            {
+                break;
+            }
+        }
+
+        if (remainingRange.Length > 0)
+        {
+            results.Add(remainingRange);
+        }
+
+        return results.ToArray();
+    }
+}
+
+record RangeMap(long DestinationStart, long SourceStart, long RangeLength)
+{
+    public bool IsInSourceRange(long value) =>
+        value >= SourceStart &&
+        value < (SourceStart + RangeLength);
+
+    public long MapSource(long value) =>
+        DestinationStart + (value - SourceStart);
+
+    internal SeedRange Transform(SeedRange intersection) =>
+        new SeedRange(MapSource(intersection.Start), intersection.Length);
+}
+
+record struct SeedRange(long Start, long Length)
+{
+    public long End => Start + Length - 1;
 }
