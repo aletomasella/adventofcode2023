@@ -10,5 +10,6 @@
     &lt;TestId&gt;xUnit::00452E89-92BE-4586-BB52-D82445CA4758::net8.0::dotnet_aoc.DayFive.DayFiveTest.PartTwo&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::00452E89-92BE-4586-BB52-D82445CA4758::net8.0::dotnet_aoc.DaySix.DaySixTest.PartOne&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::00452E89-92BE-4586-BB52-D82445CA4758::net8.0::dotnet_aoc.DaySix.DaySixTest.PartTwo&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::00452E89-92BE-4586-BB52-D82445CA4758::net8.0::dotnet_aoc.DaySeven.DaySevenTest&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
