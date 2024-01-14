@@ -95,9 +95,121 @@ public static class DaySeven
         return result;
     }
 
-    public static int PartTwo(string[] input)
+    public static long PartTwo(string[] input)
     {
-        return 0;
+        long result = 0;
+
+        var cardsStrength = new Dictionary<string, int>();
+
+        cardsStrength.Add("A", 14);
+        cardsStrength.Add("K", 13);
+        cardsStrength.Add("Q", 12);
+        cardsStrength.Add("T", 10);
+        // Js are Jokers
+        cardsStrength.Add("J", 1);
+
+        for (var i = 9; i > 1; i--)
+        {
+            cardsStrength.Add(i.ToString(), i);
+        }
+
+
+        var handsData = new List<HandsData>();
+
+
+        foreach (var line in input)
+        {
+            var hand = line.Split(' ')[0].ToCharArray();
+            var bid = int.Parse(line.Split(' ')[1]);
+
+
+            var cardNumbers = new List<int>();
+
+            var pairsDic = new Dictionary<string, int>();
+
+            var handType = HandTypes.HighCard;
+
+            var jokers = 0;
+
+            foreach (var card in hand)
+            {
+                if (pairsDic.ContainsKey(card.ToString()) && card != 'J') pairsDic[card.ToString()]++;
+                else if (card != 'J') pairsDic.Add(card.ToString(), 1);
+                else jokers++;
+
+                cardNumbers.Add(cardsStrength[card.ToString()]);
+            }
+
+            var concatCardNumbers =
+                int.Parse(string.Join("", cardNumbers.Select(x => x < 10 ? $"0{x}" : x.ToString())));
+
+
+            var pairs = pairsDic.Count;
+
+            switch (pairs)
+            {
+                case 0:
+                    handType = HandTypes.FiveOfAKind;
+                    break;
+                case 1:
+                    handType = HandTypes.FiveOfAKind;
+                    break;
+                case 2:
+                    if (pairsDic.ContainsValue(4) && jokers == 1) handType = HandTypes.FiveOfAKind;
+                    else if (pairsDic.ContainsValue(4)) handType = HandTypes.FourOfAKind;
+                    else if (pairsDic.ContainsValue(3) && jokers == 1) handType = HandTypes.FourOfAKind;
+                    else if (pairsDic.ContainsValue(3)) handType = HandTypes.FullHouse;
+                    else if (jokers == 2) handType = HandTypes.FourOfAKind;
+                    else handType = HandTypes.FullHouse;
+                    break;
+                case 3:
+                    if (pairsDic.ContainsValue(3) && jokers == 1) handType = HandTypes.FourOfAKind;
+                    else if (pairsDic.ContainsValue(3)) handType = HandTypes.ThreeOfAKind;
+                    else if (jokers == 1) handType = HandTypes.ThreeOfAKind;
+                    else if (jokers == 2) handType = HandTypes.ThreeOfAKind;
+                    else handType = HandTypes.TwoPairs;
+                    break;
+                case 4:
+                    if (jokers == 1) handType = HandTypes.ThreeOfAKind;
+                    else handType = HandTypes.Pair;
+                    break;
+                default:
+                    handType = HandTypes.HighCard;
+                    break;
+            }
+
+
+            handsData.Add(new HandsData
+            {
+                HandType = handType,
+                Bid = bid,
+                CardNumbers = concatCardNumbers,
+                Cards = hand
+            });
+        }
+
+
+        var orderData = handsData.OrderBy(x => x.HandType).ThenBy(x => x.CardNumbers).ToArray();
+
+
+        foreach (var hand in orderData)
+        {
+            var jokers = hand.Cards.Count(x => x == 'J');
+
+            if (jokers > 0)
+            {
+                Console.WriteLine(
+                    $"{hand.HandType} || {string.Join("", hand.Cards)} || {hand.Bid} || {string.Join(",", hand.CardNumbers)}");
+            }
+        }
+
+
+        for (var i = 0; i < orderData.Count(); i++)
+        {
+            result += orderData.ElementAt(i).Bid * (i + 1);
+        }
+
+        return result;
     }
 }
 
@@ -117,4 +229,6 @@ struct HandsData
     public HandTypes HandType { get; set; }
     public int Bid { get; set; }
     public int CardNumbers { get; set; }
+
+    public char[] Cards { get; set; }
 }

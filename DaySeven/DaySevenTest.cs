@@ -26,6 +26,6 @@ KTJJT 220
 QQQJA 483";
 
 
-        Assert.Equal(0, DaySeven.PartTwo(input.Split('\n')));
+        Assert.Equal(5905, DaySeven.PartTwo(input.Split('\n')));
     }
 }
