@@ -2,13 +2,13 @@ namespace dotnet_aoc.DaySeven;
 
 public static class DaySeven
 {
-    public static long PartOne(string[] inputs)
+    public static long PartOne(string[] input)
     {
-        var input = @"32T3K 765
-T55J5 684
-KK677 28
-KTJJT 220
-QQQJA 483".Split('\n');
+//         var input = @"32T3K 765
+// T55J5 684
+// KK677 28
+// KTJJT 220
+// QQQJA 483".Split('\n');
 
         long result = 0;
 
@@ -50,6 +50,9 @@ QQQJA 483".Split('\n');
                 cardNumbers.Add(cardsStrength[card.ToString()]);
             }
 
+            var concatCardNumbers =
+                int.Parse(string.Join("", cardNumbers.Select(x => x < 10 ? $"0{x}" : x.ToString())));
+
             var pairs = pairsDic.Count;
 
 
@@ -71,18 +74,18 @@ QQQJA 483".Split('\n');
             {
                 HandType = handType,
                 Bid = bid,
-                CardNumbers = cardNumbers.ToArray()
+                CardNumbers = concatCardNumbers
             });
         }
 
 
-        var orderData = handsData.OrderBy(x => x.HandType);
+        var orderData = handsData.OrderBy(x => x.HandType).ThenBy(x => x.CardNumbers).ToArray();
 
 
-        foreach (var hand in orderData)
-        {
-            Console.WriteLine($"{hand.HandType} || {hand.Bid} || {string.Join(",", hand.CardNumbers)}");
-        }
+        // foreach (var hand in orderData)
+        // {
+        //     Console.WriteLine($"{hand.HandType} || {hand.Bid} || {string.Join(",", hand.CardNumbers)}");
+        // }
 
         for (var i = 0; i < orderData.Count(); i++)
         {
@@ -113,5 +116,5 @@ struct HandsData
 {
     public HandTypes HandType { get; set; }
     public int Bid { get; set; }
-    public int[] CardNumbers { get; set; }
+    public int CardNumbers { get; set; }
 }
