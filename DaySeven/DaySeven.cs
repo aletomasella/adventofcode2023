@@ -144,40 +144,87 @@ public static class DaySeven
                 int.Parse(string.Join("", cardNumbers.Select(x => x < 10 ? $"0{x}" : x.ToString())));
 
 
-            var pairs = pairsDic.Count;
+            // var pairs = pairsDic.Count;
+            //
+            // switch (pairs)
+            // {
+            //     case 0:
+            //         handType = HandTypes.FiveOfAKind;
+            //         break;
+            //     case 1:
+            //         handType = HandTypes.FiveOfAKind;
+            //         break;
+            //     case 2:
+            //         if (pairsDic.ContainsValue(4) && jokers == 1) handType = HandTypes.FiveOfAKind;
+            //         else if (pairsDic.ContainsValue(4)) handType = HandTypes.FourOfAKind;
+            //         else if (pairsDic.ContainsValue(3) && jokers == 1) handType = HandTypes.FourOfAKind;
+            //         else if (pairsDic.ContainsValue(3)) handType = HandTypes.FullHouse;
+            //         else if (jokers == 2) handType = HandTypes.FourOfAKind;
+            //         else handType = HandTypes.FullHouse;
+            //         break;
+            //     case 3:
+            //         if (pairsDic.ContainsValue(3) && jokers == 1) handType = HandTypes.FourOfAKind;
+            //         else if (pairsDic.ContainsValue(3)) handType = HandTypes.ThreeOfAKind;
+            //         else if (jokers == 1) handType = HandTypes.ThreeOfAKind;
+            //         else if (jokers == 2) handType = HandTypes.ThreeOfAKind;
+            //         else handType = HandTypes.TwoPairs;
+            //         break;
+            //     case 4:
+            //         handType = HandTypes.Pair;
+            //         break;
+            //     default:
+            //         handType = HandTypes.HighCard;
+            //         break;
+            // }
 
-            switch (pairs)
+            var jokerCount = jokers;
+            // logic to calculate strength of the hand
+            if (pairsDic.Any(c => c.Value == (5 - jokerCount)))
             {
-                case 0:
-                    handType = HandTypes.FiveOfAKind;
-                    break;
-                case 1:
-                    handType = HandTypes.FiveOfAKind;
-                    break;
-                case 2:
-                    if (pairsDic.ContainsValue(4) && jokers == 1) handType = HandTypes.FiveOfAKind;
-                    else if (pairsDic.ContainsValue(4)) handType = HandTypes.FourOfAKind;
-                    else if (pairsDic.ContainsValue(3) && jokers == 1) handType = HandTypes.FourOfAKind;
-                    else if (pairsDic.ContainsValue(3)) handType = HandTypes.FullHouse;
-                    else if (jokers == 2) handType = HandTypes.FourOfAKind;
-                    else handType = HandTypes.FullHouse;
-                    break;
-                case 3:
-                    if (pairsDic.ContainsValue(3) && jokers == 1) handType = HandTypes.FourOfAKind;
-                    else if (pairsDic.ContainsValue(3)) handType = HandTypes.ThreeOfAKind;
-                    else if (jokers == 1) handType = HandTypes.ThreeOfAKind;
-                    else if (jokers == 2) handType = HandTypes.ThreeOfAKind;
-                    else handType = HandTypes.TwoPairs;
-                    break;
-                case 4:
-                    if (jokers == 1) handType = HandTypes.ThreeOfAKind;
-                    else handType = HandTypes.Pair;
-                    break;
-                default:
-                    handType = HandTypes.HighCard;
-                    break;
+                // five of a kind
+                handType = HandTypes.FiveOfAKind;
             }
-
+            else if (jokerCount == 5)
+            {
+                handType = HandTypes.FiveOfAKind;
+            }
+            else if (pairsDic.Any(c => c.Value >= (4 - jokerCount)))
+            {
+                // four of a kind
+                handType = HandTypes.FourOfAKind;
+            }
+            else if ((pairsDic.Any(c => c.Value == 3) && pairsDic.Any(c => c.Value == 2)) ||
+                     (jokerCount == 1 && pairsDic.Count(c => c.Value == 2) == 2) ||
+                     (jokerCount >= 2 && pairsDic.Any(c => c.Value == 2)))
+                // 0 jokers => classic full house
+                // 1 joker => 2 pairs
+                // 2 jokers => 1 pair
+            {
+                // full house
+                handType = HandTypes.FullHouse;
+            }
+            else if (pairsDic.Any(c => c.Value == (3 - jokerCount)))
+            {
+                // three of a kind
+                handType = HandTypes.ThreeOfAKind;
+            }
+            else if (pairsDic.Count(c => c.Value == 2) == 2 ||
+                     (jokerCount == 1 && pairsDic.Count(c => c.Value == 2) >= 1) ||
+                     (jokerCount == 2))
+            {
+                // two pairs
+                handType = HandTypes.TwoPairs;
+            }
+            else if (pairsDic.Any(c => c.Value == (2 - jokerCount)))
+            {
+                // one pair
+                handType = HandTypes.Pair;
+            }
+            else
+            {
+                // high card
+                handType = HandTypes.HighCard;
+            }
 
             handsData.Add(new HandsData
             {
@@ -194,13 +241,8 @@ public static class DaySeven
 
         foreach (var hand in orderData)
         {
-            var jokers = hand.Cards.Count(x => x == 'J');
-
-            if (jokers > 0)
-            {
-                Console.WriteLine(
-                    $"{hand.HandType} || {string.Join("", hand.Cards)} || {hand.Bid} || {string.Join(",", hand.CardNumbers)}");
-            }
+            Console.WriteLine(
+                $"{hand.HandType} || {string.Join("", hand.Cards)} || {hand.Bid} || {string.Join(",", hand.CardNumbers)}");
         }
 
 
