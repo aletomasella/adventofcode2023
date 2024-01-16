@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 
+using dotnet_aoc.DayEight;
 using dotnet_aoc.DayFive;
 using dotnet_aoc.DayFour;
 using dotnet_aoc.DayOne;
@@ -50,7 +51,7 @@ using dotnet_aoc.DayTwo;
 // Console.WriteLine($"Day Three Part Two: {resultDayThreePartTwo}");
 
 // DAY FOUR ADVENT OF CODE
-Console.WriteLine("DAY FOUR ADVENT OF CODE");
+// Console.WriteLine("DAY FOUR ADVENT OF CODE");
 // var fileInputFour = new StreamReader("./DayFour/input.txt");
 //
 // var inputFour = fileInputFour.ReadToEnd();
@@ -95,16 +96,31 @@ Console.WriteLine("DAY FOUR ADVENT OF CODE");
 // Console.WriteLine($"Day Six Part Two: {resultDaySixPartTwo}");
 
 // DAY SEVEN ADVENT OF CODE
-Console.WriteLine("DAY SEVEN ADVENT OF CODE");
+// Console.WriteLine("DAY SEVEN ADVENT OF CODE");
+//
+// var fileInputSevenReader = new StreamReader("./DaySeven/input.txt");
+//
+// var inputSeven = fileInputSevenReader.ReadToEnd();
+//
+// var resultDaySevenPartOne = DaySeven.PartOne(inputSeven.Split('\n'));
+//
+// Console.WriteLine($"Day Seven Part One: {resultDaySevenPartOne}");
+//
+// var resultDaySevenPartTwo = DaySeven.PartTwo(inputSeven.Split('\n'));
+//
+// Console.WriteLine($"Day Seven Part Two: {resultDaySevenPartTwo}");
 
-var fileInputSevenReader = new StreamReader("./DaySeven/input.txt");
+// DAY EIGHT ADVENT OF CODE
+Console.WriteLine("DAY EIGHT ADVENT OF CODE");
 
-var inputSeven = fileInputSevenReader.ReadToEnd();
+var fileInputEightReader = new StreamReader("./DayEight/input.txt");
 
-var resultDaySevenPartOne = DaySeven.PartOne(inputSeven.Split('\n'));
+var inputEight = fileInputEightReader.ReadToEnd();
 
-Console.WriteLine($"Day Seven Part One: {resultDaySevenPartOne}");
+var resultDayEightPartOne = DayEight.PartOne(inputEight.Split('\n'));
 
-var resultDaySevenPartTwo = DaySeven.PartTwo(inputSeven.Split('\n'));
+Console.WriteLine($"Day Eight Part One: {resultDayEightPartOne}");
 
-Console.WriteLine($"Day Seven Part Two: {resultDaySevenPartTwo}");
+var resultDayEightPartTwo = DayEight.PartTwo(inputEight.Split('\n'));
+
+Console.WriteLine($"Day Eight Part Two: {resultDayEightPartTwo}");
