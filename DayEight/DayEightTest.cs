@@ -31,8 +31,17 @@ ZZZ = (ZZZ, ZZZ)";
     [Fact]
     public void PartTwo()
     {
-        var input = @"";
+        var input = @"LR
 
-        Assert.Equal(8, DayEight.PartTwo(input.Split('\n')));
+11A = (11B, XXX)
+11B = (XXX, 11Z)
+11Z = (11B, XXX)
+22A = (22B, XXX)
+22B = (22C, 22C)
+22C = (22Z, 22Z)
+22Z = (22B, 22B)
+XXX = (XXX, XXX)";
+
+        Assert.Equal(6, DayEight.PartTwo(input.Split('\n')));
     }
 }
