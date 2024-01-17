@@ -42,6 +42,6 @@ ZZZ = (ZZZ, ZZZ)";
 22Z = (22B, 22B)
 XXX = (XXX, XXX)";
 
-        Assert.Equal(6, DayEight.PartTwo(input.Split('\n')));
+        Assert.Equal((ulong)6, DayEight.PartTwo(input.Split('\n')));
     }
 }

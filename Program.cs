@@ -117,9 +117,9 @@ var fileInputEightReader = new StreamReader("./DayEight/input.txt");
 
 var inputEight = fileInputEightReader.ReadToEnd();
 
-var resultDayEightPartOne = DayEight.PartOne(inputEight.Split('\n'));
+// var resultDayEightPartOne = DayEight.PartOne(inputEight.Split('\n'));
 
-Console.WriteLine($"Day Eight Part One: {resultDayEightPartOne}");
+// Console.WriteLine($"Day Eight Part One: {resultDayEightPartOne}");
 
 var resultDayEightPartTwo = DayEight.PartTwo(inputEight.Split('\n'));
 
