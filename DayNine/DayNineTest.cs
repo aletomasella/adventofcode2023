@@ -7,61 +7,25 @@ public class DayNineTest
     [Fact]
     public void PartOne()
     {
-        var input = new[]
-        {
-            "35",
-            "20",
-            "15",
-            "25",
-            "47",
-            "40",
-            "62",
-            "55",
-            "65",
-            "95",
-            "102",
-            "117",
-            "150",
-            "182",
-            "127",
-            "219",
-            "299",
-            "277",
-            "309",
-            "576"
-        };
+        var input = @"10  13  16  21  30  45  68
+   3   3   5   9  15  23
+     0   2   4   6   8
+       2   2   2   2
+         0   0   0";
 
-        Assert.Equal(127, DayNine.PartOne(input));
+        Assert.Equal(127, DayNine.PartOne(input.Split('\n')));
     }
 
 
     [Fact]
     public void PartTwo()
     {
-        var input = new[]
-        {
-            "35",
-            "20",
-            "15",
-            "25",
-            "47",
-            "40",
-            "62",
-            "55",
-            "65",
-            "95",
-            "102",
-            "117",
-            "150",
-            "182",
-            "127",
-            "219",
-            "299",
-            "277",
-            "309",
-            "576"
-        };
+        var input = @"10  13  16  21  30  45  68
+   3   3   5   9  15  23
+     0   2   4   6   8
+       2   2   2   2
+         0   0   0";
 
-        Assert.Equal(62, DayNine.PartTwo(input));
+        Assert.Equal(62, DayNine.PartTwo(input.Split('\n')));
     }
 }
