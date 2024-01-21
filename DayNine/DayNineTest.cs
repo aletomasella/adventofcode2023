@@ -22,6 +22,6 @@ public class DayNineTest
 1 3 6 10 15 21
 10 13 16 21 30 45";
 
-        Assert.Equal(62, DayNine.PartTwo(input.Split('\n')));
+        Assert.Equal(2, DayNine.PartTwo(input.Split('\n')));
     }
 }
