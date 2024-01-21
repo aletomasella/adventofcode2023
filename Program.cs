@@ -8,6 +8,7 @@ using dotnet_aoc.DayNine;
 using dotnet_aoc.DayOne;
 using dotnet_aoc.DaySeven;
 using dotnet_aoc.DaySix;
+using dotnet_aoc.DayTen;
 using dotnet_aoc.DayThree;
 using dotnet_aoc.DayTwo;
 
@@ -128,16 +129,32 @@ using dotnet_aoc.DayTwo;
 
 // DAY NINE ADVENT OF CODE
 
-Console.WriteLine("DAY NINE ADVENT OF CODE");
+// Console.WriteLine("DAY NINE ADVENT OF CODE");
+//
+// var fileInputNineReader = new StreamReader("./DayNine/input.txt");
+//
+// var inputNine = fileInputNineReader.ReadToEnd();
+//
+// var resultDayNinePartOne = DayNine.PartOne(inputNine.Split('\n'));
+//
+// Console.WriteLine($"Day Nine Part One: {resultDayNinePartOne}");
+//
+// var resultDayNinePartTwo = DayNine.PartTwo(inputNine.Split('\n'));
+//
+// Console.WriteLine($"Day Nine Part Two: {resultDayNinePartTwo}");
 
-var fileInputNineReader = new StreamReader("./DayNine/input.txt");
+// DAY TEN ADVENT OF CODE
 
-var inputNine = fileInputNineReader.ReadToEnd();
+Console.WriteLine("DAY TEN ADVENT OF CODE");
 
-var resultDayNinePartOne = DayNine.PartOne(inputNine.Split('\n'));
+var fileInputTenReader = new StreamReader("./DayTen/input.txt");
 
-Console.WriteLine($"Day Nine Part One: {resultDayNinePartOne}");
+var inputTen = fileInputTenReader.ReadToEnd();
 
-var resultDayNinePartTwo = DayNine.PartTwo(inputNine.Split('\n'));
+var resultDayTenPartOne = DayTen.PartOne(inputTen.Split('\n'));
 
-Console.WriteLine($"Day Nine Part Two: {resultDayNinePartTwo}");
+Console.WriteLine($"Day Ten Part One: {resultDayTenPartOne}");
+
+var resultDayTenPartTwo = DayTen.PartTwo(inputTen.Split('\n'));
+
+Console.WriteLine($"Day Ten Part Two: {resultDayTenPartTwo}");
